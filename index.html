@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Quiz App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+
+        <div id="home-page" class="page active">
+            <h1>Fun Quiz</h1>
+            <button id="start-btn" class="btn">Masuk</button>
+        </div>
+
+        <div id="user-data-page" class="page">
+            <h2>Masukkan Data Anda</h2>
+            <form id="user-form">
+                <div class="form-group">
+                    <label for="username">Nama:</label>
+                    <input type="text" id="username" name="username" placeholder="Masukkan Nama Anda" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="usernim">NIM:</label>
+                    <input type="text" id="usernim" name="usernim" placeholder="Masukkan NIM Anda" required>
+                </div>
+
+                <button type="submit" class="btn">Mulai Kuis</button>
+            </form>
+        </div>
+
+        <div id="quiz-page" class="page">
+            <div class="quiz-header">
+                <div id="timer-container">
+                    <label class="switch">
+                        <input type="checkbox" id="timer-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                    <span id="timer">30s</span>
+                </div>
+                <div id="progress">
+                    Answered: <span id="answered">0</span> / <span id="total">5</span>
+                </div>
+            </div>
+            <div id="question-container">
+            </div>
+            <div class="navigation">
+                <button id="prev-btn" class="btn">Previous</button>
+                <button id="next-btn" class="btn">Next</button>
+            </div>
+        </div>
+
+        <div id="results-page" class="page">
+            <h2>Hasil Quiz</h2>
+            <div class="result-group">
+                <p><strong>Nama:</strong> <span id="result-name"></span></p>
+                <p><strong>NIM:</strong> <span id="result-nim"></span></p>
+                <p><strong>Total Score:</strong> <span id="total-score"></span> / <span id="max-score"></span></p>
+            </div>
+            <button id="restart-btn" class="btn">Ulangi Quiz</button>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+<footer>
+    <p>&copy; 2022 Quiz App</p>
+    <p>Ariel Yosua Hasibuan - 105222004 & Rayhan Surya Destian - 105222024</p>
+</footer>
+</html>

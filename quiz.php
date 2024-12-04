@@ -7,32 +7,16 @@
     <title>Fun Quiz</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
 
-        <div id="home-page" class="page active">
-            <h1>Fun Quiz</h1>
-            <button id="start-btn" class="btn">Masuk</button>
-        </div>
+        <p>Name: <?= htmlspecialchars($_POST['username']) ?></p>
+        <br>
+        <p>NIM: <?= htmlspecialchars($_POST['usernim']) ?></p>
 
-        <div id="user-data-page" class="page">
-            <h2>Masukkan Data Anda</h2>
-            <form action="quiz.php" method="POST">
-                <div class="form-group">
-                    <label for="username">Nama:</label>
-                    <input type="text" id="username" name="username" placeholder="Masukkan Nama Anda" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="usernim">NIM:</label>
-                    <input type="text" id="usernim" name="usernim" placeholder="Masukkan NIM Anda" required>
-                </div>
-
-                <button type="submit" class="btn">Mulai Kuis</button>
-            </form>
-        </div>
-
-        <div id="quiz-page" class="page">
+        <!-- Quiz Page -->
+        <div id="quiz-page" class="page active">
             <div class="quiz-header">
                 <div id="timer-container">
                     <label class="switch">
@@ -42,7 +26,7 @@
                     <span id="timer">30s</span>
                 </div>
                 <div id="progress">
-                    Answered: <span id="answered">0</span> / <span id="total">5</span>
+                    Answered: <span id="answered">0</span> / <span id="total">7</span>
                 </div>
             </div>
             <div id="question-container">
@@ -53,6 +37,7 @@
             </div>
         </div>
 
+        <!-- Results Page -->
         <div id="results-page" class="page">
             <h2>Hasil Quiz</h2>
             <div class="result-group">
@@ -64,6 +49,14 @@
         </div>
 
     </div>
+
+    <!-- Embed user data into JavaScript -->
+    <script>
+        const userData = {
+            name: "<?= htmlspecialchars($_POST['username']) ?>",
+            id: "<?= htmlspecialchars($_POST['usernim']) ?>"
+        };
+    </script>
 
     <script src="script.js"></script>
 </body>

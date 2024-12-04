@@ -18,7 +18,7 @@ const questions = [
         id: 3,
         type: 'multiple',
         question: 'Bahasa apa yang tidak dipakai pada pembuatan web ini?',
-        options: ['Javascipt', 'HTML', 'Python', 'CSS'],
+        options: ['JavaScript', 'HTML', 'Python', 'CSS'],
         answer: 'Python',
         score: 10
     },
@@ -40,7 +40,7 @@ const questions = [
     {
         id: 6,
         type: 'multiple',
-        question: 'Apa nama hewan yang menjad simbol angkatan 22?',
+        question: 'Apa nama hewan yang menjadi simbol angkatan 22?',
         options: ['Gagak', 'Cobra', 'Buaya', 'Kucing', 'Merak'],
         answer: 'Gagak',
         score: 10
@@ -66,6 +66,7 @@ let timerInterval;
 let timeLeft = 30;
 let timerEnabled = true;
 
+// Reference to page elements
 const pages = {
     home: document.getElementById('home-page'),
     userData: document.getElementById('user-data-page'),
@@ -73,6 +74,7 @@ const pages = {
     results: document.getElementById('results-page')
 };
 
+// Reference to buttons and other elements
 const startBtn = document.getElementById('start-btn');
 const userForm = document.getElementById('user-form');
 const questionContainer = document.getElementById('question-container');
@@ -88,85 +90,130 @@ const totalScoreSpan = document.getElementById('total-score');
 const maxScoreSpan = document.getElementById('max-score');
 const restartBtn = document.getElementById('restart-btn');
 
-document.getElementById('total').textContent = questions.length;
+// Initialize total questions count
+if (totalSpan) {
+    totalSpan.textContent = questions.length;
+}
 
-startBtn.addEventListener('click', () => {
-    showPage('userData');
-});
+// Event Listeners
 
-userForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    userData.name = document.getElementById('username').value.trim();
-    userData.id = document.getElementById('usernim').value.trim();
+// Start button to navigate to User Data Page
+if (startBtn) {
+    startBtn.addEventListener('click', () => {
+        showPage('userData');
+    });
+}
 
-    if (userData.name === '' || userData.id === '') {
-        alert('Please enter both Name and User ID.');
-        return;
-    }
+// Handle form submission (Optional: If you decide to handle form via JS instead of direct POST)
+// Uncomment if you switch to JS-based form handling
+/*
+if (userForm) {
+    userForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        userData.name = document.getElementById('username').value.trim();
+        userData.id = document.getElementById('usernim').value.trim();
 
-    showPage('quiz');
-    renderQuestion();
-    updateProgress();
-    updateNavigationButtons();
-    startTimer();
-});
+        if (userData.name === '' || userData.id === '') {
+            alert('Please enter both Name and User ID.');
+            return;
+        }
 
-prevBtn.addEventListener('click', () => {
-    saveAnswer(); 
-    if (currentQuestionIndex > 0) {
-        currentQuestionIndex--;
+        showPage('quiz');
         renderQuestion();
+        updateProgress();
         updateNavigationButtons();
-        resetTimer();
-    }
-});
-
-nextBtn.addEventListener('click', () => {
-    saveAnswer();
-    if (currentQuestionIndex < questions.length - 1) {
-        currentQuestionIndex++;
-        renderQuestion();
-        updateNavigationButtons();
-        resetTimer();
-    } else {
-        calculateScore();
-        showResults();
-    }
-});
-
-timerToggle.addEventListener('change', (e) => {
-    timerEnabled = e.target.checked;
-    if (timerEnabled) {
         startTimer();
-    } else {
-        clearInterval(timerInterval);
-        timerDisplay.textContent = 'Off';
-    }
-});
+    });
+}
+*/
 
-restartBtn.addEventListener('click', () => {
-    userData = { name: '', id: '' };
-    currentQuestionIndex = 0;
-    answers = {};
-    totalScore = 0;
-    timerEnabled = true;
-    timeLeft = 30;
-    timerToggle.checked = true;
-    document.getElementById('user-form').reset();
-    showPage('home');
-});
+// Previous button to navigate to the previous question
+if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+        saveAnswer();
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            renderQuestion();
+            updateNavigationButtons();
+            resetTimer();
+        }
+    });
+}
 
+// Next button to navigate to the next question or submit the quiz
+if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+        saveAnswer();
+        if (currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            renderQuestion();
+            updateNavigationButtons();
+            resetTimer();
+        } else {
+            calculateScore();
+            showResults();
+        }
+    });
+}
+
+// Timer toggle to enable/disable the timer
+if (timerToggle) {
+    timerToggle.addEventListener('change', (e) => {
+        timerEnabled = e.target.checked;
+        if (timerEnabled) {
+            startTimer();
+        } else {
+            clearInterval(timerInterval);
+            if (timerDisplay) {
+                timerDisplay.textContent = 'Off';
+            }
+        }
+    });
+}
+
+// Restart button to reset the quiz
+if (restartBtn) {
+    restartBtn.addEventListener('click', () => {
+        userData = { name: '', id: '' };
+        currentQuestionIndex = 0;
+        answers = {};
+        totalScore = 0;
+        timerEnabled = true;
+        timeLeft = 30;
+        if (timerToggle) {
+            timerToggle.checked = true;
+        }
+        // Reset any forms if present
+        if (userForm) {
+            userForm.reset();
+        }
+        showPage('home');
+    });
+}
+
+// Functions
+
+/**
+ * Show the specified page and hide others
+ * @param {string} page - The key of the page to show ('home', 'userData', 'quiz', 'results')
+ */
 function showPage(page) {
     for (let key in pages) {
-        if (key === page) {
-            pages[key].classList.add('active');
-        } else {
-            pages[key].classList.remove('active');
+        if (pages[key]) { // Only if the page exists
+            if (key === page) {
+                pages[key].classList.add('active');
+            } else {
+                pages[key].classList.remove('active');
+            }
         }
     }
 }
 
+/**
+ * Render the current question based on currentQuestionIndex
+ */
 function renderQuestion() {
+    if (!questionContainer) return;
     const question = questions[currentQuestionIndex];
     let html = `<div class="question"><h3>Question ${currentQuestionIndex + 1}</h3><br><p>${question.question}</p><br></div>`;
 
@@ -196,6 +243,9 @@ function renderQuestion() {
     questionContainer.innerHTML = html;
 }
 
+/**
+ * Save the user's answer for the current question
+ */
 function saveAnswer() {
     const question = questions[currentQuestionIndex];
     if (question.type === 'multiple') {
@@ -216,16 +266,31 @@ function saveAnswer() {
     updateProgress();
 }
 
+/**
+ * Update the state of navigation buttons based on the current question index
+ */
 function updateNavigationButtons() {
-    prevBtn.disabled = currentQuestionIndex === 0;
-    nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? 'Submit' : 'Next';
+    if (prevBtn) {
+        prevBtn.disabled = currentQuestionIndex === 0;
+    }
+    if (nextBtn) {
+        nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? 'Submit' : 'Next';
+    }
 }
 
+/**
+ * Update the progress display (number of answered questions)
+ */
 function updateProgress() {
-    let answered = Object.keys(answers).length;
-    answeredSpan.textContent = answered;
+    if (answeredSpan) {
+        let answered = Object.keys(answers).length;
+        answeredSpan.textContent = answered;
+    }
 }
 
+/**
+ * Calculate the total score based on the user's answers
+ */
 function calculateScore() {
     totalScore = 0;
     questions.forEach(q => {
@@ -234,23 +299,32 @@ function calculateScore() {
                 totalScore += q.score;
             }
         } else if (q.type === 'essay') {
-            if (answers[q.id] === q.answer) {
+            // For essay questions, perform a case-insensitive comparison
+            if (answers[q.id] && answers[q.id].toLowerCase() === q.answer.toLowerCase()) {
                 totalScore += q.score;
             }
         }
     });
 }
 
+/**
+ * Display the results page with the user's score and information
+ */
 function showResults() {
-    resultName.textContent = userData.name;
-    resultId.textContent = userData.id;
-    totalScoreSpan.textContent = totalScore;
-    maxScoreSpan.textContent = questions.reduce((acc, q) => acc + q.score, 0);
+    if (resultName && resultId && totalScoreSpan && maxScoreSpan) {
+        resultName.textContent = userData.name;
+        resultId.textContent = userData.id;
+        totalScoreSpan.textContent = totalScore;
+        maxScoreSpan.textContent = questions.reduce((acc, q) => acc + q.score, 0);
+    }
     showPage('results');
 }
 
+/**
+ * Start the countdown timer
+ */
 function startTimer() {
-    if (!timerEnabled) return;
+    if (!timerEnabled || !timerDisplay) return;
     clearInterval(timerInterval);
     timeLeft = 30;
     timerDisplay.textContent = `Auto Next in ${timeLeft}s`;
@@ -277,9 +351,35 @@ function startTimer() {
     }, 1000);
 }
 
+/**
+ * Reset the timer when navigating between questions
+ */
 function resetTimer() {
     if (timerEnabled) {
         clearInterval(timerInterval);
         startTimer();
     }
 }
+
+// Initialization: Check if userData is present and set the current page accordingly
+(function initializeQuiz() {
+    // Check if userData is attached to the window object
+    if (typeof window.userData !== 'undefined' && window.userData.name && window.userData.id) {
+        userData.name = window.userData.name;
+        userData.id = window.userData.id;
+        currentPage = 'quiz';
+    }
+
+    // Wait for the DOM to load before rendering
+    document.addEventListener('DOMContentLoaded', () => {
+        if (currentPage === 'quiz') {
+            showPage('quiz');
+            renderQuestion();
+            updateProgress();
+            updateNavigationButtons();
+            startTimer();
+        } else if (currentPage === 'home-page') {
+            showPage('home');
+        }
+    });
+})();
